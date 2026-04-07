@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resolve Engineering Celebration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --resolve-lime: #D2E626;
+    --resolve-lime-bright: #E2F640;
+    --resolve-dark: #111108;
+    --resolve-deep: #0a0a04;
+    --warm-gold: #E8B930;
+    --warm-amber: #D4890A;
+    --turmeric: #E8A817;
+    --saffron: #FF9933;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--resolve-deep);
+    color: #e8e6d8;
+    font-family: 'Space Grotesk', 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === CANVAS === */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  #grid-canvas {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%; height: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+  }
+
+  /* === RESOLVE LOGO HERO === */
+  .logo-hero-container {
+    position: absolute;
+    top: 8vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+    width: 150px;
+    height: 234px;
+    animation: logo-float 6s ease-in-out infinite;
+  }
+
+  @keyframes logo-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-12px); }
+  }
+
+  .logo-hero-container svg {
+    width: 100%;
+    height: 100%;
+    filter:
+      drop-shadow(0 0 40px rgba(210, 230, 38, 0.4))
+      drop-shadow(0 0 80px rgba(210, 230, 38, 0.2))
+      drop-shadow(0 0 140px rgba(210, 230, 38, 0.1));
+  }
+
+  .logo-hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(210, 230, 38, 0.15) 0%, rgba(210, 230, 38, 0.05) 40%, transparent 70%);
+    animation: glow-pulse 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  /* Scanline effect over logo */
+  .logo-scanlines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .logo-scanlines::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 300%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 6px,
+      rgba(10, 10, 4, 0.15) 6px,
+      rgba(10, 10, 4, 0.15) 8px
+    );
+    animation: scanline-scroll 4s linear infinite;
+  }
+
+  @keyframes scanline-scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(33.33%); }
+  }
+
+  /* === HERO === */
+  .hero {
+    text-align: center;
+    padding: 6vh 2rem 2rem;
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 22px;
+    border: 1px solid var(--resolve-lime);
+    border-radius: 30px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+    background: rgba(210, 230, 38, 0.05);
+    text-shadow: 0 0 10px rgba(210, 230, 38, 0.4);
+    animation: pulse-border 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 5px rgba(210, 230, 38, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(210, 230, 38, 0.5); }
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(180deg, #ffffff 0%, var(--resolve-lime) 60%, var(--warm-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(210, 230, 38, 0.35));
+  }
+
+  .hero h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    font-weight: 400;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    text-shadow: 0 0 20px rgba(210, 230, 38, 0.5);
+    position: relative;
+    z-index: 2;
+    margin-bottom: 2rem;
+  }
+
+  .hero-date {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-terminal {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.85rem;
+    color: rgba(210, 230, 38, 0.5);
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+    letter-spacing: 1px;
+  }
+
+  .hero-terminal .blink {
+    animation: blink-cursor 1s step-end infinite;
+  }
+
+  @keyframes blink-cursor {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 3vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    animation: float 2s ease-in-out infinite;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .scroll-indicator svg {
+    width: 30px;
+    height: 30px;
+    stroke: var(--resolve-lime);
+    opacity: 0.6;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(10px); }
+  }
+
+  /* === SECTIONS === */
+  section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    text-shadow: 0 0 15px rgba(210, 230, 38, 0.4);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  /* === COUNTDOWN === */
+  .countdown-section { text-align: center; }
+
+  .countdown-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .countdown-unit {
+    background: linear-gradient(135deg, rgba(17, 17, 8, 0.92), rgba(10, 10, 4, 0.92));
+    border: 1px solid rgba(210, 230, 38, 0.25);
+    border-radius: 12px;
+    padding: 1.5rem 1.2rem;
+    min-width: 100px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .countdown-unit:hover {
+    border-color: var(--warm-gold);
+    box-shadow: 0 0 25px rgba(232, 185, 48, 0.25);
+  }
+
+  .countdown-unit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--resolve-lime), var(--warm-gold));
+  }
+
+  .countdown-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(210, 230, 38, 0.4);
+    line-height: 1;
+  }
+
+  .countdown-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    margin-top: 0.5rem;
+  }
+
+  .countdown-subtext {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    color: rgba(210, 230, 38, 0.35);
+    margin-top: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  /* === STATUS BANNER (eng easter egg) === */
+  .status-banner {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    padding: 12px 20px;
+    background: rgba(210, 230, 38, 0.05);
+    border: 1px solid rgba(210, 230, 38, 0.15);
+    border-radius: 8px;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.8rem;
+    color: rgba(210, 230, 38, 0.7);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--resolve-lime);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: status-pulse 2s ease-in-out infinite;
+    vertical-align: middle;
+    box-shadow: 0 0 8px rgba(210, 230, 38, 0.5);
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* === DETAILS === */
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+
+  .detail-card {
+    background: linear-gradient(135deg, rgba(17, 17, 8, 0.85), rgba(10, 10, 4, 0.85));
+    border: 1px solid rgba(210, 230, 38, 0.15);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(10px);
+  }
+
+  .detail-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--warm-gold);
+    box-shadow: 0 8px 30px rgba(232, 185, 48, 0.12);
+  }
+
+  .detail-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .detail-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-card p {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .detail-card .easter-hint {
+    font-size: 0.78rem;
+    color: rgba(255, 153, 51, 0.55);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* === DOSA SECTION === */
+  .dosa-section {
+    text-align: center;
+    position: relative;
+    overflow: visible;
+  }
+
+  .dosa-scene {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem auto;
+  }
+
+  #dosa-agent-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid rgba(210, 230, 38, 0.1);
+  }
+
+  .dosa-agent-status {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    color: var(--resolve-lime);
+    opacity: 0.6;
+    letter-spacing: 0.5px;
+    margin-top: 0.75rem;
+    min-height: 18px;
+    text-align: center;
+  }
+
+  .dosa-caption {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 153, 51, 0.6);
+    margin-top: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .dosa-menu {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+
+  .dosa-chip {
+    padding: 8px 18px;
+    background: rgba(255, 153, 51, 0.08);
+    border: 1px solid rgba(255, 153, 51, 0.25);
+    border-radius: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--saffron);
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .dosa-chip:hover {
+    background: rgba(255, 153, 51, 0.15);
+    border-color: var(--saffron);
+    box-shadow: 0 0 15px rgba(255, 153, 51, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* === MUSIC VISUALIZER === */
+  .music-section {
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .music-tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  #sitar-canvas {
+    width: 100%;
+    height: 120px;
+    border-radius: 12px;
+    display: block;
+  }
+
+  .music-note {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 153, 51, 0.5);
+    margin-top: 1rem;
+    letter-spacing: 3px;
+  }
+
+  /* Rangoli SVG */
+  .rangoli-divider {
+    width: 200px;
+    height: 40px;
+    margin: 1rem auto 2rem;
+    display: block;
+  }
+
+  /* === DEPLOY LOG (engineering easter egg) === */
+  .deploy-log {
+    max-width: 500px;
+    margin: 2rem auto 0;
+    padding: 16px 20px;
+    background: rgba(10, 10, 4, 0.9);
+    border: 1px solid rgba(210, 230, 38, 0.12);
+    border-radius: 8px;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: rgba(210, 230, 38, 0.5);
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .deploy-log .log-line {
+    opacity: 0;
+    animation: log-appear 0.3s forwards;
+  }
+
+  .deploy-log .log-success { color: var(--resolve-lime); }
+  .deploy-log .log-info { color: rgba(255, 255, 255, 0.4); }
+  .deploy-log .log-saffron { color: var(--saffron); }
+  .deploy-log .log-dim { color: rgba(255,255,255,0.25); }
+
+  @keyframes log-appear {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === TRANSPORT === */
+  .transport-banner {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    background: rgba(210, 230, 38, 0.05);
+    border: 1px solid rgba(210, 230, 38, 0.2);
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .transport-banner h4 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--resolve-lime);
+    margin-bottom: 0.6rem;
+  }
+
+  .transport-banner p {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+  }
+
+  .transport-banner .uber-highlight {
+    color: var(--resolve-lime);
+    font-weight: 600;
+  }
+
+  /* === FOOTER === */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--resolve-lime);
+    text-shadow: 0 0 10px rgba(210, 230, 38, 0.3);
+  }
+
+  .footer-tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 0.5rem;
+  }
+
+  .footer-easter {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+    color: rgba(255, 153, 51, 0.15);
+    margin-top: 1.5rem;
+    cursor: default;
+    transition: color 0.8s;
+  }
+
+  .footer-easter:hover {
+    color: rgba(255, 153, 51, 0.7);
+  }
+
+  /* === DIVIDER === */
+  .neon-divider {
+    width: 120px;
+    height: 2px;
+    margin: 0 auto 3rem;
+    background: linear-gradient(90deg, transparent, var(--resolve-lime), var(--warm-gold), transparent);
+    border: none;
+    border-radius: 2px;
+  }
+
+  /* === SCANLINES === */
+  .scanlines {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    .sun { width: 200px; height: 200px; }
+    .countdown-unit { min-width: 75px; padding: 1rem 0.8rem; }
+    .countdown-number { font-size: 2rem; }
+    .details-grid { grid-template-columns: repeat(2, 1fr); }
+    section { padding: 3rem 1.5rem; }
+    .dosa-menu { gap: 0.5rem; }
+    .deploy-log { font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<canvas id="grid-canvas"></canvas>
+<div class="scanlines"></div>
+
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-hero-container">
+      <div class="logo-hero-glow"></div>
+      <!-- Resolve logo mark: D-shape + triangle -->
+      <svg viewBox="0 0 96 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="96" y2="156" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#E6F536"/>
+            <stop offset="50%" stop-color="#D2E626"/>
+            <stop offset="100%" stop-color="#C4D818"/>
+          </linearGradient>
+        </defs>
+        <!-- D shape (top) -->
+        <path d="M 0,0 L 50,0 A 43,43 0 0 1 50,86 L 0,86 Z" fill="url(#logoGrad)"/>
+        <!-- Downward triangle (bottom) -->
+        <path d="M 0,96 L 93,96 L 46.5,156 Z" fill="url(#logoGrad)"/>
+      </svg>
+      <div class="logo-scanlines"></div>
+    </div>
+
+    <span class="hero-badge">You're Invited</span>
+
+    <h1>RESOLVE</h1>
+    <h2>Engineering Celebration</h2>
+    <p class="hero-date">Thursday, April 16, 2026 &bull; 6:00 PM &bull; Mayank's House</p>
+
+    <div class="hero-terminal">
+      <span id="typewriter-text"></span><span class="blink">_</span>
+    </div>
+
+    <a href="#countdown" class="scroll-indicator">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section id="countdown" class="countdown-section">
+    <h3 class="section-title">Time to Deploy</h3>
+    <div class="neon-divider"></div>
+    <div class="status-banner">
+      <span class="status-dot"></span>
+      All systems nominal &bull; Party deployment scheduled &bull; 0 incidents
+    </div>
+    <div class="countdown-grid">
+      <div class="countdown-unit">
+        <div class="countdown-number" id="cd-days">--</div>
+        <div class="countdown-label">Days</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-number" id="cd-hours">--</div>
+        <div class="countdown-label">Hours</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-number" id="cd-mins">--</div>
+        <div class="countdown-label">Mins</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-number" id="cd-secs">--</div>
+        <div class="countdown-label">Secs</div>
+      </div>
+    </div>
+    <div class="countdown-subtext">ETA until production party goes live</div>
+  </section>
+
+  <!-- DETAILS -->
+  <section>
+    <h3 class="section-title">The Runbook</h3>
+    <div class="neon-divider"></div>
+    <div class="details-grid">
+      <div class="detail-card">
+        <span class="detail-icon">📅</span>
+        <h3>When</h3>
+        <p>Thursday, April 16, 2026<br>6:00 PM onwards</p>
+        <div class="easter-hint">SLA: arrive on time or get paged</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-icon">📍</span>
+        <h3>Where</h3>
+        <p>Mayank's House<br><a href="https://www.google.com/maps/search/?api=1&query=1720+Holly+Ave+Menlo+Park+CA" target="_blank" style="font-size:0.9rem; color: var(--resolve-lime); opacity:0.8; text-decoration: none; border-bottom: 1px solid rgba(210,230,38,0.3); transition: opacity 0.3s;">1720 Holly Ave, Menlo Park &nearr;</a></p>
+        <div class="easter-hint">endpoint: /mayank/house</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-icon">🤖</span>
+        <h3>Why</h3>
+        <p>Celebrating what we've built — AI agents that keep the world's software running</p>
+        <div class="easter-hint">uptime: 100% vibes</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-icon">🎵</span>
+        <h3>Sounds</h3>
+        <p>Indian beats &amp; music all evening long</p>
+        <div class="easter-hint">sitar meets synthwave</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOSA AGENT SECTION -->
+  <section class="dosa-section" id="dosa-section">
+    <h3 class="section-title">The Fuel</h3>
+    <div class="neon-divider"></div>
+
+    <div class="dosa-scene">
+      <canvas id="dosa-agent-canvas" width="600" height="420"></canvas>
+      <div class="dosa-agent-status" id="dosa-agent-status"></div>
+    </div>
+
+    <p class="dosa-caption">Fresh dosas, hot off the tawa &mdash; the real production pipeline</p>
+
+    <div class="dosa-menu">
+      <span class="dosa-chip">Masala Dosa</span>
+      <span class="dosa-chip">Rava Dosa</span>
+      <span class="dosa-chip">Mysore Masala</span>
+      <span class="dosa-chip">Plain Dosa</span>
+      <span class="dosa-chip">Sambar</span>
+      <span class="dosa-chip">Coconut Chutney</span>
+    </div>
+  </section>
+
+  <!-- MUSIC VISUALIZER -->
+  <section class="music-section" id="music-section">
+    <h3 class="section-title">The Soundtrack</h3>
+    <div class="neon-divider"></div>
+    <p class="music-tagline">Indian beats all night long</p>
+
+    <svg class="rangoli-divider" viewBox="0 0 200 40" fill="none">
+      <circle cx="100" cy="20" r="3" fill="#D2E626" opacity="0.6"/>
+      <circle cx="100" cy="20" r="10" stroke="#D2E626" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="100" cy="20" r="18" stroke="#FF9933" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="80" cy="20" r="3" fill="#FF9933" opacity="0.4"/>
+      <circle cx="120" cy="20" r="3" fill="#FF9933" opacity="0.4"/>
+      <circle cx="60" cy="20" r="2" fill="#D2E626" opacity="0.3"/>
+      <circle cx="140" cy="20" r="2" fill="#D2E626" opacity="0.3"/>
+      <circle cx="40" cy="20" r="1.5" fill="#FF9933" opacity="0.2"/>
+      <circle cx="160" cy="20" r="1.5" fill="#FF9933" opacity="0.2"/>
+      <ellipse cx="90" cy="12" rx="4" ry="7" transform="rotate(-30 90 12)" stroke="#D2E626" stroke-width="0.4" opacity="0.25" fill="none"/>
+      <ellipse cx="110" cy="12" rx="4" ry="7" transform="rotate(30 110 12)" stroke="#D2E626" stroke-width="0.4" opacity="0.25" fill="none"/>
+      <ellipse cx="90" cy="28" rx="4" ry="7" transform="rotate(30 90 28)" stroke="#FF9933" stroke-width="0.4" opacity="0.25" fill="none"/>
+      <ellipse cx="110" cy="28" rx="4" ry="7" transform="rotate(-30 110 28)" stroke="#FF9933" stroke-width="0.4" opacity="0.25" fill="none"/>
+    </svg>
+
+    <canvas id="sitar-canvas"></canvas>
+    <p class="music-note">sa &middot; re &middot; ga &middot; ma &middot; pa &middot; dha &middot; ni &middot; sa</p>
+  </section>
+
+  <!-- DEPLOY LOG -->
+  <section>
+    <div class="deploy-log" id="deploy-log"></div>
+  </section>
+
+  <!-- GETTING THERE -->
+  <section style="text-align:center;">
+    <h3 class="section-title">Getting There</h3>
+    <div class="neon-divider"></div>
+    <div class="transport-banner">
+      <h4>Carpool</h4>
+      <p>Ubers to and from the office are <span class="uber-highlight">expensed</span> &mdash; carpool with your team and enjoy the ride.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">RESOLVE</div>
+    <div class="footer-tagline">AI for prod &bull; dosas for the soul</div>
+    <div class="footer-easter">$ cat /etc/party.conf → masala_dosa=true sambar=infinite incidents=0 vibes=maximum</div>
+  </footer>
+
+</div>
+
+<script>
+// === TYPEWRITER (Hero terminal) ===
+(function() {
+  const phrases = [
+    '$ resolve deploy --env celebration --region mayank-house',
+    '> agents: fueled by dosas and good code',
+    '$ kubectl get pods -n party | grep dosa-service',
+    '> dosa-service-v2   1/1   Running   0   crispy',
+    '> incident_count: 0 | vibe_check: passed',
+    '$ resolve investigate --why "we are awesome"',
+    '> root_cause: incredible engineering team',
+  ];
+
+  const el = document.getElementById('typewriter-text');
+  let phraseIdx = 0, charIdx = 0, deleting = false, pause = 0;
+
+  function tick() {
+    if (pause > 0) { pause--; requestAnimationFrame(tick); return; }
+
+    const phrase = phrases[phraseIdx];
+
+    if (!deleting) {
+      el.textContent = phrase.slice(0, charIdx + 1);
+      charIdx++;
+      if (charIdx >= phrase.length) {
+        deleting = true;
+        pause = 120;
+      }
+    } else {
+      el.textContent = phrase.slice(0, charIdx);
+      charIdx--;
+      if (charIdx < 0) {
+        deleting = false;
+        charIdx = 0;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        pause = 30;
+      }
+    }
+
+    setTimeout(tick, deleting ? 25 : 50);
+  }
+
+  tick();
+})();
+
+// === COUNTDOWN TIMER ===
+const EVENT_DATE = new Date('2026-04-16T18:00:00').getTime();
+
+function updateCountdown() {
+  const now = Date.now();
+  const diff = EVENT_DATE - now;
+
+  if (diff <= 0) {
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id =>
+      document.getElementById(id).textContent = '00');
+    return;
+  }
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+  document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+  document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+  document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+
+// === DEPLOY LOG (types out on scroll) ===
+(function() {
+  const logEl = document.getElementById('deploy-log');
+  const lines = [
+    { text: '$ resolve plan --party engineering-celebration', cls: 'log-info' },
+    { text: '> Step 1: Securing venue at /mayank/house (1720 Holly Ave) ...', cls: '' },
+    { text: '✓ Venue locked', cls: 'log-success' },
+    { text: '> Step 2: Initializing dosa pipeline ...', cls: '' },
+    { text: '  → masala_dosa: preheating tawa', cls: 'log-saffron' },
+    { text: '  → rava_dosa: crisping batter', cls: 'log-saffron' },
+    { text: '  → sambar: simmering (p99 latency: delicious)', cls: 'log-saffron' },
+    { text: '✓ Dosa service healthy', cls: 'log-success' },
+    { text: '> Step 3: Deploying indian music agents ...', cls: '' },
+    { text: '  → sitar-agent: tuned', cls: 'log-saffron' },
+    { text: '  → tabla-agent: in rhythm', cls: 'log-saffron' },
+    { text: '✓ Soundtrack pipeline running', cls: 'log-success' },
+    { text: '> Step 4: Running vibe check ...', cls: '' },
+    { text: '✓ All checks passed. Zero incidents. Maximum vibes.', cls: 'log-success' },
+    { text: '', cls: 'log-dim' },
+    { text: '> Step 5: Provisioning expensed Ubers from office ...', cls: '' },
+    { text: '\u2713 Carpool fleet ready', cls: 'log-success' },
+    { text: '', cls: 'log-dim' },
+    { text: '🟢 Party deployment ready. See you there.', cls: 'log-success' },
+  ];
+
+  let started = false;
+
+  const obs = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !started) {
+      started = true;
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          const span = document.createElement('div');
+          span.className = 'log-line ' + line.cls;
+          span.textContent = line.text;
+          span.style.animationDelay = '0s';
+          logEl.appendChild(span);
+          logEl.scrollTop = logEl.scrollHeight;
+        }, i * 350);
+      });
+    }
+  }, { threshold: 0.3 });
+
+  obs.observe(logEl);
+})();
+
+// === STARS / PARTICLE CANVAS ===
+(function() {
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, mouseX = 0, mouseY = 0;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  const STAR_COUNT = 180;
+  const stars = [];
+
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const r = Math.random();
+    let color;
+    if (r > 0.8) color = `rgba(210, 230, 38, VAR)`;
+    else if (r > 0.65) color = `rgba(255, 153, 51, VAR)`;
+    else if (r > 0.5) color = `rgba(232, 185, 48, VAR)`;
+    else color = `rgba(255, 255, 255, VAR)`;
+
+    stars.push({
+      x: Math.random() * 3000,
+      y: Math.random() * 2000,
+      size: Math.random() * 2 + 0.5,
+      speed: Math.random() * 0.3 + 0.05,
+      brightness: Math.random(),
+      phase: Math.random() * Math.PI * 2,
+      color
+    });
+  }
+
+  const shootingStars = [];
+
+  function spawnShootingStar() {
+    if (shootingStars.length < 2 && Math.random() < 0.006) {
+      shootingStars.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.4,
+        length: Math.random() * 80 + 40,
+        speed: Math.random() * 8 + 6,
+        angle: Math.PI / 4 + Math.random() * 0.3,
+        life: 1,
+        golden: Math.random() < 0.35
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    const time = Date.now() * 0.001;
+
+    stars.forEach(star => {
+      const twinkle = 0.4 + 0.6 * Math.sin(time * 2 + star.phase);
+      const alpha = star.brightness * twinkle;
+      const dx = (mouseX - W / 2) * star.speed * 0.02;
+      const dy = (mouseY - H / 2) * star.speed * 0.02;
+      const sx = ((star.x + dx) % W + W) % W;
+      const sy = ((star.y + dy) % H + H) % H;
+
+      ctx.beginPath();
+      ctx.arc(sx, sy, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = star.color.replace('VAR', alpha.toFixed(2));
+      ctx.fill();
+
+      if (star.size > 1.5) {
+        ctx.beginPath();
+        ctx.arc(sx, sy, star.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = star.color.replace('VAR', (alpha * 0.12).toFixed(2));
+        ctx.fill();
+      }
+    });
+
+    spawnShootingStar();
+    for (let i = shootingStars.length - 1; i >= 0; i--) {
+      const ss = shootingStars[i];
+      ss.x += Math.cos(ss.angle) * ss.speed;
+      ss.y += Math.sin(ss.angle) * ss.speed;
+      ss.life -= 0.015;
+
+      if (ss.life <= 0) { shootingStars.splice(i, 1); continue; }
+
+      const grad = ctx.createLinearGradient(
+        ss.x, ss.y,
+        ss.x - Math.cos(ss.angle) * ss.length,
+        ss.y - Math.sin(ss.angle) * ss.length
+      );
+      if (ss.golden) {
+        grad.addColorStop(0, `rgba(255, 153, 51, ${ss.life})`);
+        grad.addColorStop(0.3, `rgba(232, 185, 48, ${ss.life * 0.7})`);
+      } else {
+        grad.addColorStop(0, `rgba(210, 230, 38, ${ss.life})`);
+      }
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(ss.x, ss.y);
+      ctx.lineTo(
+        ss.x - Math.cos(ss.angle) * ss.length,
+        ss.y - Math.sin(ss.angle) * ss.length
+      );
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = ss.golden ? 2.5 : 1.5;
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// === PERSPECTIVE GRID ===
+(function() {
+  const canvas = document.getElementById('grid-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = Math.floor(window.innerHeight * 0.5);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let offset = 0;
+
+  function drawGrid() {
+    ctx.clearRect(0, 0, W, H);
+    const horizon = 0, vanishX = W / 2, gridLines = 30, hLines = 20;
+
+    for (let i = 0; i < hLines; i++) {
+      const t = (i + offset) / hLines;
+      const y = horizon + Math.pow(t, 1.8) * (H - horizon);
+      const alpha = Math.pow(t, 0.5) * 0.35;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.strokeStyle = `rgba(210, 230, 38, ${alpha})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    for (let i = -gridLines; i <= gridLines; i++) {
+      const x = vanishX + i * (W / gridLines) * 1.5;
+      ctx.beginPath();
+      ctx.moveTo(vanishX, horizon);
+      ctx.lineTo(x, H);
+      const alpha = (1 - Math.abs(i) / gridLines) * 0.25;
+      ctx.strokeStyle = `rgba(210, 230, 38, ${alpha})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    const glow = ctx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, W * 0.4);
+    glow.addColorStop(0, 'rgba(255, 153, 51, 0.12)');
+    glow.addColorStop(0.5, 'rgba(232, 185, 48, 0.05)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    offset += 0.003;
+    if (offset >= 1) offset -= 1;
+    requestAnimationFrame(drawGrid);
+  }
+  drawGrid();
+})();
+
+// === DOSA AGENT ANIMATION ===
+(function() {
+  const canvas = document.getElementById('dosa-agent-canvas');
+  const ctx = canvas.getContext('2d');
+  const statusEl = document.getElementById('dosa-agent-status');
+
+  const CW = 600, CH = 420;
+  canvas.width = CW;
+  canvas.height = CH;
+
+  const LIME = '#D2E626';
+  const LIME_DIM = 'rgba(210, 230, 38, 0.3)';
+  const SAFFRON = '#FF9933';
+  const BG = '#0a0a04';
+
+  const PHASES = [
+    { name: 'idle',          duration: 60,  status: '> agent: awaiting next dosa order...' },
+    { name: 'pour_batter',   duration: 90,  status: '> agent: pouring batter onto tawa...' },
+    { name: 'spread_batter', duration: 80,  status: '> agent: spreading batter in circular motion...' },
+    { name: 'cooking',       duration: 120, status: '> agent: monitoring dosa (temp: optimal, crispiness: rising)' },
+    { name: 'add_filling',   duration: 70,  status: '> agent: deploying masala filling...' },
+    { name: 'fold',          duration: 60,  status: '> agent: folding dosa (incident-free)' },
+    { name: 'serve',         duration: 80,  status: '> agent: dosa deployed to plate successfully \u2713' },
+    { name: 'celebrate',     duration: 90,  status: '> status: zero incidents. dosa_count++' },
+  ];
+
+  let phaseIdx = 0, frame = 0, dosaCount = 0;
+  let particles = [];
+
+  function lerp(a,b,t){return a+(b-a)*Math.max(0,Math.min(1,t));}
+  function easeInOut(t){return t<0.5?2*t*t:-1+(4-2*t)*t;}
+  function easeOut(t){return 1-Math.pow(1-t,3);}
+
+  function drawTawa(x,y,w,h){
+    ctx.save(); ctx.translate(x,y);
+    ctx.beginPath(); ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
+    const g=ctx.createRadialGradient(0,-h*0.2,0,0,0,w);
+    g.addColorStop(0,'#555'); g.addColorStop(0.7,'#333'); g.addColorStop(1,'#222');
+    ctx.fillStyle=g; ctx.fill();
+    ctx.strokeStyle='#444'; ctx.lineWidth=3; ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(-w*0.2,-h*0.3,w*0.3,h*0.2,-0.3,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawDosaFlat(x,y,radius,spread,cook,op){
+    ctx.save(); ctx.translate(x,y);
+    const r=radius*spread;
+    ctx.beginPath(); ctx.ellipse(0,0,r,r*0.4,0,0,Math.PI*2);
+    const g=ctx.createRadialGradient(0,0,r*0.1,0,0,r);
+    const b=cook;
+    g.addColorStop(0,`rgba(${Math.floor(lerp(240,196,b))},${Math.floor(lerp(220,146,b))},${Math.floor(lerp(160,58,b))},${op})`);
+    g.addColorStop(0.6,`rgba(${Math.floor(lerp(220,139,b))},${Math.floor(lerp(200,105,b))},${Math.floor(lerp(120,20,b))},${op})`);
+    g.addColorStop(1,`rgba(${Math.floor(lerp(154,97,b))},${Math.floor(lerp(140,73,b))},${Math.floor(lerp(84,10,b))},${op*0.8})`);
+    ctx.fillStyle=g; ctx.fill();
+    if(cook>0.3){const n=Math.floor(cook*20);for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2+i*1.7,d=(0.2+((i*7+3)%11)/15)*r;ctx.beginPath();ctx.arc(Math.cos(a)*d,Math.sin(a)*d*0.4,1.5,0,Math.PI*2);ctx.fillStyle=`rgba(100,70,20,${op*cook*0.4})`;ctx.fill();}}
+    if(cook>0.6){ctx.beginPath();ctx.ellipse(0,0,r,r*0.4,0,0,Math.PI*2);ctx.strokeStyle=`rgba(200,150,50,${(cook-0.6)*0.5*op})`;ctx.lineWidth=2;ctx.stroke();}
+    ctx.restore();
+  }
+
+  function drawMasala(x,y,radius,prog,op){
+    ctx.save(); ctx.translate(x,y);
+    const w=radius*0.6*prog,h=radius*0.15*prog;
+    ctx.beginPath(); ctx.ellipse(0,-2,w,h,0,0,Math.PI*2);
+    const g=ctx.createRadialGradient(0,-2,0,0,-2,w);
+    g.addColorStop(0,`rgba(230,200,60,${op})`); g.addColorStop(1,`rgba(180,140,30,${op*0.6})`);
+    ctx.fillStyle=g; ctx.fill();
+    if(prog>0.5){for(let i=0;i<5;i++){ctx.beginPath();ctx.ellipse((i-2)*w*0.3,-2+Math.sin(i*2)*h*0.4,4,3,i*0.5,0,Math.PI*2);ctx.fillStyle=`rgba(240,220,100,${op*0.7})`;ctx.fill();}}
+    ctx.restore();
+  }
+
+  function drawFoldedDosa(x,y,radius,fold,op){
+    ctx.save(); ctx.translate(x,y);
+    const w=lerp(radius,radius*0.8,fold),h=lerp(radius*0.4,radius*0.28,fold),topS=lerp(0,radius*0.24,fold);
+    ctx.beginPath(); ctx.ellipse(0,0,w,h,0,0,Math.PI);
+    const g=ctx.createLinearGradient(0,-h,0,h);
+    g.addColorStop(0,`rgba(180,130,40,${op})`); g.addColorStop(1,`rgba(139,105,20,${op})`);
+    ctx.fillStyle=g; ctx.fill();
+    if(fold>0){ctx.beginPath();ctx.ellipse(0,-topS*0.3,w*0.95,h*(1-fold*0.5),0,Math.PI,Math.PI*2);const f=ctx.createLinearGradient(0,-h-topS,0,0);f.addColorStop(0,`rgba(200,150,50,${op})`);f.addColorStop(1,`rgba(170,120,35,${op})`);ctx.fillStyle=f;ctx.fill();}
+    ctx.beginPath(); ctx.ellipse(0,0,w,h,0,0,Math.PI); ctx.strokeStyle=`rgba(220,170,70,${op*0.5})`; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSteam(x,y,intensity){
+    const t=Date.now()*0.001;
+    for(let i=0;i<8;i++){const p=((t*0.5+i*0.3)%2)/2,sx=x+Math.sin(t*2+i*1.5)*15,sy=y-p*60,a=(1-p)*intensity*0.25;ctx.beginPath();ctx.arc(sx,sy,3+p*8,0,Math.PI*2);ctx.fillStyle=`rgba(200,200,180,${a})`;ctx.fill();}
+  }
+
+  function drawPlate(x,y){
+    ctx.save(); ctx.translate(x,y);
+    ctx.beginPath(); ctx.ellipse(0,5,55,18,0,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(0,0,52,16,0,0,Math.PI*2); ctx.fillStyle='#e8e4dc'; ctx.fill(); ctx.strokeStyle='#ccc'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0,0,40,12,0,0,Math.PI*2); ctx.strokeStyle='rgba(180,180,170,0.4)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawChutneys(x,y){
+    ctx.save(); ctx.translate(x,y);
+    ctx.beginPath(); ctx.ellipse(-20,0,12,5,0,0,Math.PI*2); ctx.fillStyle='#888'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(-20,-1,10,4,0,0,Math.PI*2); ctx.fillStyle='#e8e0d0'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(20,0,12,5,0,0,Math.PI*2); ctx.fillStyle='#888'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(20,-1,10,4,0,0,Math.PI*2); ctx.fillStyle='#c07020'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawAgent(x,y,armAngle,tool){
+    ctx.save(); ctx.translate(x,y);
+    // Body
+    ctx.beginPath(); ctx.roundRect(-25,-10,50,55,8); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle=LIME; ctx.lineWidth=1.5; ctx.stroke();
+    // Logo on body
+    ctx.beginPath(); ctx.roundRect(-10,5,20,20,3); ctx.fillStyle='rgba(210,230,38,0.15)'; ctx.fill(); ctx.strokeStyle='rgba(210,230,38,0.4)'; ctx.lineWidth=1; ctx.stroke();
+    // Head
+    ctx.beginPath(); ctx.roundRect(-20,-45,40,35,6); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle=LIME; ctx.lineWidth=1.5; ctx.stroke();
+    // Eyes
+    const blink=Math.sin(Date.now()*0.005)>0.95?0.2:1;
+    ctx.beginPath(); ctx.ellipse(-8,-30,4,4*blink,0,0,Math.PI*2); ctx.fillStyle=LIME; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(8,-30,4,4*blink,0,0,Math.PI*2); ctx.fillStyle=LIME; ctx.fill();
+    // Eye glow
+    ctx.beginPath(); ctx.ellipse(-8,-30,8,8,0,0,Math.PI*2); ctx.fillStyle='rgba(210,230,38,0.1)'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(8,-30,8,8,0,0,Math.PI*2); ctx.fillStyle='rgba(210,230,38,0.1)'; ctx.fill();
+    // Mouth
+    ctx.beginPath(); ctx.arc(0,-20,6,0.2,Math.PI-0.2); ctx.strokeStyle='rgba(210,230,38,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Antenna
+    ctx.beginPath(); ctx.moveTo(0,-45); ctx.lineTo(0,-55); ctx.strokeStyle=LIME_DIM; ctx.lineWidth=2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,-57,3,0,Math.PI*2); ctx.fillStyle=LIME; ctx.fill();
+    const ag=0.2+0.2*Math.sin(Date.now()*0.008);
+    ctx.beginPath(); ctx.arc(0,-57,6,0,Math.PI*2); ctx.fillStyle=`rgba(210,230,38,${ag})`; ctx.fill();
+    // Left arm
+    ctx.save(); ctx.translate(-25,5); ctx.rotate(armAngle);
+    ctx.beginPath(); ctx.roundRect(-4,0,8,35,3); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle='rgba(210,230,38,0.5)'; ctx.lineWidth=1; ctx.stroke();
+    if(tool==='ladle'){ctx.beginPath();ctx.roundRect(-2,35,4,20,2);ctx.fillStyle='#555';ctx.fill();ctx.beginPath();ctx.ellipse(0,58,10,5,0,0,Math.PI*2);ctx.fillStyle='#666';ctx.fill();ctx.strokeStyle='#888';ctx.lineWidth=1;ctx.stroke();}
+    else if(tool==='spatula'){ctx.beginPath();ctx.roundRect(-2,35,4,22,2);ctx.fillStyle='#555';ctx.fill();ctx.beginPath();ctx.roundRect(-8,57,16,3,1);ctx.fillStyle='#777';ctx.fill();}
+    ctx.restore();
+    // Right arm
+    ctx.save(); ctx.translate(25,5); ctx.rotate(-0.15+Math.sin(Date.now()*0.002)*0.05);
+    ctx.beginPath(); ctx.roundRect(-4,0,8,30,3); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle='rgba(210,230,38,0.5)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.restore();
+    // Legs
+    ctx.beginPath(); ctx.roundRect(-18,45,12,20,3); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle='rgba(210,230,38,0.3)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(6,45,12,20,3); ctx.fillStyle='#1a1a10'; ctx.fill(); ctx.strokeStyle='rgba(210,230,38,0.3)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.restore();
+  }
+
+  function spawnParticles(x,y,n){for(let i=0;i<n;i++){particles.push({x,y,vx:(Math.random()-0.5)*6,vy:-Math.random()*5-2,life:1,decay:0.01+Math.random()*0.015,size:2+Math.random()*4,color:Math.random()>0.5?LIME:SAFFRON});}}
+
+  function updateParticles(){
+    for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=p.decay;if(p.life<=0){particles.splice(i,1);continue;}ctx.globalAlpha=p.life;ctx.beginPath();ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.globalAlpha=1;}
+  }
+
+  function drawCounter(){
+    ctx.save();
+    ctx.fillStyle='rgba(10,10,4,0.8)'; ctx.strokeStyle='rgba(210,230,38,0.2)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(CW-145,12,130,44,8); ctx.fill(); ctx.stroke();
+    ctx.font='600 10px "Space Grotesk",monospace'; ctx.fillStyle='rgba(210,230,38,0.5)'; ctx.textAlign='right';
+    ctx.fillText('DOSAS DEPLOYED',CW-22,30);
+    ctx.font='900 20px "Orbitron",sans-serif'; ctx.fillStyle=LIME;
+    ctx.fillText(String(dosaCount).padStart(3,'0'),CW-22,50);
+    ctx.restore();
+  }
+
+  function drawIncidentCounter(){
+    ctx.save();
+    ctx.fillStyle='rgba(10,10,4,0.8)'; ctx.strokeStyle='rgba(210,230,38,0.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(12,12,110,44,8); ctx.fill(); ctx.stroke();
+    ctx.font='600 10px "Space Grotesk",monospace'; ctx.fillStyle='rgba(210,230,38,0.5)'; ctx.textAlign='left';
+    ctx.fillText('INCIDENTS',22,30);
+    ctx.font='900 20px "Orbitron",sans-serif'; ctx.fillStyle=LIME;
+    ctx.fillText('000',22,50);
+    ctx.restore();
+  }
+
+  const TX=320,TY=290,AX=150,AY=215,PX=490,PY=340;
+
+  function mainLoop(){
+    ctx.fillStyle=BG; ctx.fillRect(0,0,CW,CH);
+    // Grid floor
+    ctx.save(); ctx.globalAlpha=0.05;
+    for(let i=0;i<12;i++){ctx.beginPath();ctx.moveTo(0,250+i*15);ctx.lineTo(CW,250+i*15);ctx.strokeStyle=LIME;ctx.lineWidth=1;ctx.stroke();}
+    for(let i=0;i<20;i++){ctx.beginPath();ctx.moveTo(i*35,250);ctx.lineTo(i*35,CH);ctx.strokeStyle=LIME;ctx.lineWidth=1;ctx.stroke();}
+    ctx.globalAlpha=1; ctx.restore();
+
+    const phase=PHASES[phaseIdx],t=frame/phase.duration,e=easeInOut(t);
+    let arm=-0.3,tool='ladle';
+
+    drawTawa(TX,TY,100,35);
+    drawPlate(PX,PY);
+    drawChutneys(PX,PY-40);
+
+    switch(phase.name){
+      case 'idle':
+        arm=-0.15+Math.sin(Date.now()*0.003)*0.08; tool='ladle';
+        drawSteam(TX,TY-30,0.3); break;
+      case 'pour_batter':
+        arm=lerp(-0.3,-0.8,e); tool='ladle';
+        if(t>0.3){drawDosaFlat(TX,TY,70,(t-0.3)/0.7*0.3,0,1);
+          if(t<0.7){ctx.beginPath();ctx.moveTo(AX-10,AY+50);ctx.quadraticCurveTo(TX-30,TY-50,TX,TY);ctx.strokeStyle='rgba(240,220,160,0.4)';ctx.lineWidth=3;ctx.stroke();}}
+        drawSteam(TX,TY-30,0.2); break;
+      case 'spread_batter':
+        arm=-0.7+Math.sin(Date.now()*0.01)*0.15; tool='spatula';
+        drawDosaFlat(TX,TY,70,0.3+e*0.7,e*0.15,1);
+        drawSteam(TX,TY-30,0.3+e*0.3); break;
+      case 'cooking':
+        arm=-0.2+Math.sin(Date.now()*0.002)*0.05; tool='spatula';
+        drawDosaFlat(TX,TY,70,1,e,1);
+        drawSteam(TX,TY-30,0.5+e*0.5);
+        if(Math.random()<0.15){particles.push({x:TX+(Math.random()-0.5)*100,y:TY+(Math.random()-0.5)*20,vx:(Math.random()-0.5)*2,vy:-Math.random()*1.5,life:0.6,decay:0.03,size:1.5,color:SAFFRON});}
+        break;
+      case 'add_filling':
+        arm=lerp(-0.3,-0.7,Math.sin(e*Math.PI)); tool='spatula';
+        drawDosaFlat(TX,TY,70,1,0.9,1);
+        drawMasala(TX,TY,70,e,1);
+        drawSteam(TX,TY-30,0.6); break;
+      case 'fold':
+        arm=lerp(-0.5,-0.3,e); tool='spatula';
+        if(e<0.5){drawDosaFlat(TX,TY,70,1,0.9,1);drawMasala(TX,TY,70,1-e*1.6,1);drawFoldedDosa(TX,TY,70,e*2,1);}
+        else{drawFoldedDosa(TX,TY,70,1,1);}
+        drawSteam(TX,TY-30,0.4); break;
+      case 'serve':
+        tool='spatula';
+        const st=easeOut(e),dx=lerp(TX,PX,st),dy=lerp(TY,PY-8,st)-Math.sin(st*Math.PI)*40;
+        arm=lerp(-0.5,-0.1,e);
+        drawFoldedDosa(dx,dy,60,1,1);
+        drawSteam(dx,dy-20,0.5);
+        if(st>0.95&&frame===Math.floor(phase.duration*0.96)){dosaCount++;spawnParticles(PX,PY-20,15);}
+        break;
+      case 'celebrate':
+        tool='spatula'; arm=-0.1+Math.sin(Date.now()*0.008)*0.15;
+        drawFoldedDosa(PX,PY-8,55,1,1);
+        drawSteam(PX,PY-30,0.6); break;
+    }
+
+    const bounce=(phase.name==='celebrate'&&t>0.4)?Math.sin(Date.now()*0.015)*3:0;
+    drawAgent(AX,AY+bounce,arm,tool);
+    updateParticles();
+    drawCounter();
+    drawIncidentCounter();
+
+    if(statusEl) statusEl.textContent=phase.status;
+
+    frame++;
+    if(frame>=phase.duration){frame=0;phaseIdx=(phaseIdx+1)%PHASES.length;}
+    requestAnimationFrame(mainLoop);
+  }
+  mainLoop();
+})();
+
+// === SITAR WAVEFORM VISUALIZER ===
+(function() {
+  const canvas = document.getElementById('sitar-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = 120;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const layers = [
+    { freq: 2, amp: 0.35, speed: 0.8, color: 'rgba(210, 230, 38, 0.5)' },
+    { freq: 3.5, amp: 0.2, speed: 1.2, color: 'rgba(255, 153, 51, 0.4)' },
+    { freq: 5, amp: 0.12, speed: 1.8, color: 'rgba(232, 185, 48, 0.3)' },
+    { freq: 7, amp: 0.08, speed: 2.5, color: 'rgba(210, 230, 38, 0.2)' },
+    { freq: 11, amp: 0.04, speed: 3.2, color: 'rgba(255, 153, 51, 0.15)' },
+  ];
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const time = Date.now() * 0.001;
+
+    layers.forEach(layer => {
+      ctx.beginPath();
+      for (let x = 0; x <= W; x++) {
+        const t = x / W;
+        const env = Math.sin(t * Math.PI);
+        const y = H / 2 + Math.sin(t * Math.PI * 2 * layer.freq + time * layer.speed) * H * layer.amp * env;
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = layer.color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+
+    for (let i = 0; i < 7; i++) {
+      const t = (i + 0.5) / 7;
+      const env = Math.sin(t * Math.PI);
+      const x = t * W;
+      const y = H / 2 + Math.sin(t * Math.PI * 2 * 2 + time * 0.8) * H * 0.35 * env;
+      const glow = 0.3 + 0.3 * Math.sin(time * 3 + i);
+
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(210, 230, 38, ${glow})`;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(210, 230, 38, ${glow * 0.2})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// === FADE-IN ON SCROLL ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.detail-card, .countdown-unit, .dosa-chip').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
