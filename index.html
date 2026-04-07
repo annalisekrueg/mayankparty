@@ -55,19 +55,17 @@
 
   /* === RESOLVE LOGO HERO === */
   .logo-hero-container {
-    position: absolute;
-    top: 8vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 0;
+    position: relative;
+    z-index: 3;
     width: 150px;
     height: 234px;
+    margin: 0 auto 1rem;
     animation: logo-float 6s ease-in-out infinite;
   }
 
   @keyframes logo-float {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-12px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
   }
 
   .logo-hero-container svg {
@@ -132,7 +130,7 @@
   /* === HERO === */
   .hero {
     text-align: center;
-    padding: 6vh 2rem 2rem;
+    padding: 10vh 2rem 2rem;
     position: relative;
     min-height: 92vh;
     display: flex;
