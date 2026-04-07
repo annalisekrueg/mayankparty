@@ -693,6 +693,7 @@
 
     <h1>RESOLVE</h1>
     <h2>Engineering Celebration</h2>
+    <button id="music-btn" onclick="toggleMusic()" style="margin: 1rem auto; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1.4rem; background:rgba(210,230,38,0.15); border:1px solid #D2E626; border-radius:2rem; color:#D2E626; font-family:inherit; font-size:0.9rem; cursor:pointer; transition:all 0.3s;">&#9654; Play Music</button>
     <p class="hero-date">Thursday, April 16, 2026 &bull; 4:00 PM &bull; Mayank's House</p>
 
     <div class="hero-terminal">
@@ -814,7 +815,6 @@
     <canvas id="sitar-canvas"></canvas>
     <p class="music-note">sa &middot; re &middot; ga &middot; ma &middot; pa &middot; dha &middot; ni &middot; sa</p>
 
-    <iframe src="https://www.youtube.com/embed/plqIksy6HEg?autoplay=1&loop=1&playlist=plqIksy6HEg" allow="autoplay" style="position:absolute;width:0;height:0;border:0;overflow:hidden;"></iframe>
   </section>
 
   <!-- DEPLOY LOG -->
@@ -842,6 +842,30 @@
 </div>
 
 <script>
+// === MUSIC PLAYER ===
+let musicPlayer = null;
+let musicPlaying = false;
+function toggleMusic() {
+  const btn = document.getElementById('music-btn');
+  if (!musicPlayer) {
+    musicPlayer = document.createElement('iframe');
+    musicPlayer.src = 'https://www.youtube.com/embed/plqIksy6HEg?autoplay=1&loop=1&playlist=plqIksy6HEg&enablejsapi=1';
+    musicPlayer.allow = 'autoplay';
+    musicPlayer.style.cssText = 'position:absolute;width:0;height:0;border:0;overflow:hidden;';
+    document.body.appendChild(musicPlayer);
+    musicPlaying = true;
+    btn.innerHTML = '&#9646;&#9646; Pause Music';
+  } else if (musicPlaying) {
+    musicPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    musicPlaying = false;
+    btn.innerHTML = '&#9654; Play Music';
+  } else {
+    musicPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    musicPlaying = true;
+    btn.innerHTML = '&#9646;&#9646; Pause Music';
+  }
+}
+
 // === TYPEWRITER (Hero terminal) ===
 (function() {
   const phrases = [
