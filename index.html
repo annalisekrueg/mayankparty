@@ -139,6 +139,53 @@
     justify-content: center;
   }
 
+  /* === MAYANK POINTER === */
+  .mayank-pointer {
+    position: relative;
+    z-index: 5;
+    width: 85px;
+    height: 85px;
+    margin-top: -20px;
+  }
+
+  .mayank-img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    border: none;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+    animation: head-wobble 3s ease-in-out infinite;
+  }
+
+  @keyframes head-wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+
+  .mayank-hand-img {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    right: -38px;
+    top: 30px;
+    z-index: 3;
+    filter: drop-shadow(0 0 8px rgba(210, 230, 38, 0.4)) invert(1) brightness(2);
+    animation: hand-poke 1.2s ease-in-out infinite;
+  }
+
+  @keyframes hand-poke {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+  }
+
+  @keyframes btn-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(210, 230, 38, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(210, 230, 38, 0.6), 0 0 50px rgba(210, 230, 38, 0.3); }
+  }
+
   .hero-badge {
     display: inline-block;
     padding: 6px 22px;
@@ -691,7 +738,14 @@
 
     <h1>RESOLVE</h1>
     <h2>Engineering Celebration</h2>
-    <button id="music-btn" onclick="toggleMusic()" style="margin: 1rem auto; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1.4rem; background:rgba(210,230,38,0.15); border:1px solid #D2E626; border-radius:2rem; color:#D2E626; font-family:inherit; font-size:0.9rem; cursor:pointer; transition:all 0.3s;">&#9654; Play Music</button>
+    <div style="position:relative; display:flex; align-items:center; justify-content:center; gap:20px; margin:1.5rem auto;">
+      <!-- Mayank pointing -->
+      <div class="mayank-pointer">
+        <img src="mayank.png" alt="Mayank" class="mayank-img" />
+        <img src="hand-right.png" alt="pointing hand" class="mayank-hand-img" />
+      </div>
+      <button id="music-btn" onclick="toggleMusic()" style="display:flex; align-items:center; gap:0.5rem; padding:0.8rem 2rem; background:rgba(210,230,38,0.25); border:2px solid #D2E626; border-radius:2rem; color:#D2E626; font-family:inherit; font-size:1.1rem; font-weight:bold; cursor:pointer; transition:all 0.3s; animation: btn-glow 2s ease-in-out infinite;">Click Me</button>
+    </div>
     <p class="hero-date">Thursday, April 16, 2026 &bull; 4:00 PM &bull; Mayank's House</p>
 
     <div class="hero-terminal">
@@ -852,15 +906,15 @@ function toggleMusic() {
     musicPlayer.style.cssText = 'position:absolute;width:0;height:0;border:0;overflow:hidden;';
     document.body.appendChild(musicPlayer);
     musicPlaying = true;
-    btn.innerHTML = '&#9646;&#9646; Pause Music';
+    btn.innerHTML = '&#9646;&#9646; Pause';
   } else if (musicPlaying) {
     musicPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
     musicPlaying = false;
-    btn.innerHTML = '&#9654; Play Music';
+    btn.innerHTML = 'Click Me';
   } else {
     musicPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
     musicPlaying = true;
-    btn.innerHTML = '&#9646;&#9646; Pause Music';
+    btn.innerHTML = '&#9646;&#9646; Pause';
   }
 }
 
